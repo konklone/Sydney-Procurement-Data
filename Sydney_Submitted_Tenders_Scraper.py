@@ -9,8 +9,8 @@ import dateutil.parser as dparser
 def write_data(data): #This is used for two different writing functions. Make sure to change the file name and fieldnames
     ordered_fieldnames =  ["type", "number", "name", "title", "bidder", "date", "committee_mem1", "committee_mem2", "committee_mem3"]
 
-    if os.path.exists("/Users/sunlight/Documents/Sydney Contracts Project/Sydney_Bidders_Bulk.csv"):
-        with open("/Users/sunlight/Documents/Sydney Contracts Project/Sydney_Bidders_Bulk.csv", "a") as datatest:
+    if os.path.exists("Sydney_Bidders_Bulk.csv"):
+        with open("Sydney_Bidders_Bulk.csv", "a") as datatest:
     #csv.register_dialect("custom", delimiter="", skipinitialspace=True)
             writer = csv.writer(datatest, dialect="excel")
             try:
@@ -19,7 +19,7 @@ def write_data(data): #This is used for two different writing functions. Make su
                 print userdataset
                 pass
     else:
-        with open("/Users/sunlight/Documents/Sydney Contracts Project/Sydney_Bidders_Bulk.csv", "w") as datatest:
+        with open("Sydney_Bidders_Bulk.csv", "w") as datatest:
         #csv.register_dialect("custom", delimiter="", skipinitialspace=True)
             csv.DictWriter(datatest, dialect="excel", fieldnames=ordered_fieldnames).writeheader()
             writer = csv.writer(datatest, dialect="excel")
@@ -45,7 +45,7 @@ def get_html( path):
                 raise e
 if __name__=='__main__':
     url =  "http://www.cityofsydney.nsw.gov.au/business/tenders/submitted-tenders"
-    
+
     page = get_html(url)
 
     soup = BeautifulSoup(page)
@@ -63,7 +63,7 @@ if __name__=='__main__':
             loc = soup.find('strong', text= "1312").parent
         else:
             pass
-        if loc.find_next_sibling('h4') != None:        
+        if loc.find_next_sibling('h4') != None:
             description = loc.find_next_sibling('h4').text
             add_info = loc.find_next_sibling('p').text
             submission_ul = loc.find_next_sibling('ul')
@@ -88,4 +88,4 @@ if __name__=='__main__':
             except:
                 data = (tender_num, ttype,t_id, child, description, date, name_string)
             write_data(data)
-        
+

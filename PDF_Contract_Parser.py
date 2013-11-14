@@ -7,11 +7,15 @@ import subprocess
 from time import sleep
 import glob
 
+
+# Requires pdftotext.
+
+
 def write_data(data): #This is used for two different writing functions. Make sure to change the file name and fieldnames
     ordered_fieldnames =  ["lobbyist", "year", "years_active", "name", "gov_pos_dum", "gov_pos_name", "member_of_cong", "cand_id", "reg_is_firm", "value", "log_value","shannon_entropy", "avg_value", "all_shannon_entropy"]
 
-    if os.path.exists("/Users/sunlight/Documents/Sydney Contracts Project/Sydney_Contracts_2013_Bulk.csv"):
-        with open("/Users/sunlight/Documents/Sydney Contracts Project/Sydney_Contracts_2013_Bulk.csv", "a") as datatest:
+    if os.path.exists("Sydney_Contracts_2013_Bulk.csv"):
+        with open("Sydney_Contracts_2013_Bulk.csv", "a") as datatest:
     #csv.register_dialect("custom", delimiter="", skipinitialspace=True)
             writer = csv.writer(datatest, dialect="excel")
             try:
@@ -20,7 +24,7 @@ def write_data(data): #This is used for two different writing functions. Make su
                 print userdataset
                 pass
     else:
-        with open("/Users/sunlight/Documents/Sydney Contracts Project/Sydney_Contracts_2013_Bulk.csv", "w") as datatest:
+        with open("Sydney_Contracts_2013_Bulk.csv", "w") as datatest:
         #csv.register_dialect("custom", delimiter="", skipinitialspace=True)
             csv.DictWriter(datatest, dialect="excel", fieldnames=ordered_fieldnames).writeheader()
             writer = csv.writer(datatest, dialect="excel")
@@ -30,14 +34,14 @@ def write_data(data): #This is used for two different writing functions. Make su
                 print i
                 pass
 
-# 
-# 
+#
+#
 # def format_url(path, **params):
 #     # params.update({'key': settings.OPEN_CONGRESS_API_KEY})
 #     params.update({'format': 'json'})
-# 
+#
 #     return '?'.join([path, urllib.urlencode(params)])
-    
+
 # def get_url_json( path):
 #     try:
 #         fp = urllib2.urlopen(path)
@@ -52,15 +56,15 @@ def write_data(data): #This is used for two different writing functions. Make su
 #                 return json.loads(fp.read())
 #             except urllib2.HTTPError, e:
 #                 raise e
-#         
+#
 if __name__=='__main__':
-    input_dir = "/Users/sunlight/Documents/Sydney Contracts Project/Sydney Contract PDFs"
-    output_dir = "/Users/sunlight/Documents/Sydney Contracts Project/Sydney Contract txts"
-    
+    input_dir = "Sydney Contract PDFs"
+    output_dir = "Sydney Contract txts"
+
     for filename in os.listdir(input_dir):
         filepath = input_dir + "/" + filename
         outpath = output_dir +"/"+filename
-        subprocess.call(['pdftotext','-nopgbrk',"-layout", filepath]) 
+        subprocess.call(['pdftotext','-nopgbrk',"-layout", filepath])
     os.chdir(input_dir)
     for files in glob.glob("*.txt"):
         pdf_filepath = input_dir + "/" + files
@@ -77,7 +81,7 @@ if __name__=='__main__':
         all_lines = []
         for line in content:
             all_lines.append(line.strip())
-    
+
         lines = [line for line in all_lines if line not in useless]
         doc_length=len(lines)
         field_dict = {"one":{"begin":0, "end":0}, "two":{"begin":0, "end":0}, "three":{"begin":0, "end":0}, "four":{"begin":0, "end":0}, "five":{"begin":0, "end":0},"six":{"begin":0, "end":0},"seven":{"begin":0, "end":0},"eight":{"begin":0, "end":0},"nine":{"begin":0, "end":0},"ten":{"begin":0, "end":0},"eleven":{"begin":0, "end":0},"twelve":{"begin":0, "end":0},"thirteen":{"begin":0, "end":0},"fourteen":{"begin":0, "end":0},"fifteen":{"begin":0, "end":0},"sixteen": {"begin":0, "end":0}, "seventeen":{"begin":0, "end":0}, "eighteen":{"begin":0, "end":0}}
@@ -89,64 +93,64 @@ if __name__=='__main__':
             elif "Name and business address" in line:
                 field_dict["one"]["end"]=line_num
                 field_dict["two"]["begin"]=line_num
-            elif "3. Particulars of any related" in line:    
+            elif "3. Particulars of any related" in line:
                 field_dict["two"]["end"]=line_num
-            elif "benefit under the contract" in line:    
+            elif "benefit under the contract" in line:
                 field_dict["three"]["begin"]=line_num
-            elif "4. Date on which the contract" in line:    
+            elif "4. Date on which the contract" in line:
                 field_dict["three"]["end"]=line_num
                 field_dict["four"]["begin"]=line_num
             elif "5. Particulars of the project" in line:
                 field_dict["four"]["end"]=line_num
-            elif "leased under the contract:" in line:    
+            elif "leased under the contract:" in line:
                 field_dict["five"]["begin"]=line_num
-            elif "6. Estimated amount payable" in line:    
+            elif "6. Estimated amount payable" in line:
                 field_dict["five"]["end"]=line_num
                 field_dict["six"]["begin"]=line_num
-            elif "7. Description of any provisions" in line:    
+            elif "7. Description of any provisions" in line:
                 field_dict["six"]["end"]=line_num
-            elif "may be varied:" in line:    
+            elif "may be varied:" in line:
                 field_dict["seven"]["begin"]=line_num
-            elif "8. Description of any provision" in line:    
+            elif "8. Description of any provision" in line:
                 field_dict["seven"]["end"]=line_num
                 field_dict["eight"]["begin"]=line_num
-            elif "9. In the case of a contract" in line:    
+            elif "9. In the case of a contract" in line:
                 field_dict["eight"]["end"]=line_num
-            elif "assessed:" in line:    
+            elif "assessed:" in line:
                 field_dict["nine"]["begin"]=line_num
-            elif "10. Description of any provision under which" in line:    
+            elif "10. Description of any provision under which" in line:
                 field_dict["nine"]["end"]=line_num
-            elif "or maintenance services:" in line:    
+            elif "or maintenance services:" in line:
                 field_dict["ten"]["begin"]=line_num
-            elif "11. Particulars of future" in line:    
+            elif "11. Particulars of future" in line:
                 field_dict["ten"]["end"]=line_num
-            elif "their proposed transfer:" in line:    
+            elif "their proposed transfer:" in line:
                 field_dict["eleven"]["begin"]=line_num
-            elif "12. Particulars of future transfers" in line:    
+            elif "12. Particulars of future transfers" in line:
                 field_dict["eleven"]["end"]=line_num
-            elif "of the proposed transfer:" in line:    
+            elif "of the proposed transfer:" in line:
                 field_dict["twelve"]["begin"]=line_num
             elif "13. The results of any" in line:
                 field_dict["twelve"]["end"]=line_num
-            elif "of Sydney:" in line:    
+            elif "of Sydney:" in line:
                 field_dict["thirteen"]["begin"]=line_num
-            elif "14. The components and quantum" in line:    
+            elif "14. The components and quantum" in line:
                 field_dict["thirteen"]["end"]=line_num
                 field_dict["fourteen"]["begin"]=line_num
-            elif "15. If relevant," in line:    
+            elif "15. If relevant," in line:
                 field_dict["fourteen"]["end"]=line_num
-            elif "sage charges):" in line:    
+            elif "sage charges):" in line:
                 field_dict["fifteen"]["begin"]=line_num
-            elif "16. If relevant," in line:    
+            elif "16. If relevant," in line:
                 field_dict["fifteen"]["end"]=line_num
-            elif "assumptions involved:" in line:    
+            elif "assumptions involved:" in line:
                 field_dict["sixteen"]["begin"]=line_num
-            elif "17. Particulars as to any " in line:    
+            elif "17. Particulars as to any " in line:
                 field_dict["sixteen"]["end"]=line_num
-            elif "be entered into:" in line:    
+            elif "be entered into:" in line:
                 field_dict["seventeen"]["begin"]=line_num
-            elif "18. Particulars of any other" in line:    
-                field_dict["seventeen"]["end"]=line_num  
+            elif "18. Particulars of any other" in line:
+                field_dict["seventeen"]["end"]=line_num
                 field_dict["eighteen"]["begin"]=line_num
                 field_dict["eighteen"]["end"]=doc_length
             else:
